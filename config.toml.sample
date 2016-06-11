@@ -3,7 +3,7 @@ ConsumerSecret = "Get this from Twitter"
 TokenKey = "run planebord auth"
 TokenSecret = "run planeboard auth"
 Host = "foo.com" // Update to your NS host
-Port = 8053
+Port = 53
 DBFile = "tweets.db"
 
 [Groups.News]
