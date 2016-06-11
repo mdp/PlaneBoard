@@ -1,0 +1,12 @@
+ConsumerKey = "Get this from Twitter"
+ConsumerSecret = "Get this from Twitter"
+TokenKey = "run planebord auth"
+TokenSecret = "run planeboard auth"
+Host = "foo.com" // Update to your NS host
+Port = 8053
+DBFile = "tweets.db"
+
+[Groups.News]
+Accounts = ["cnn", "ap", "wsj"]
+[Groups.Sports]
+Account = ["espn"]
