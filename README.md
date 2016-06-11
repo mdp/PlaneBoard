@@ -5,12 +5,11 @@
 
 ## Why
 
-This project has no real use or application, it's merely a fun experiment that I prototyped while waiting on a delayed flight. There are numerous methods to tunnel traffic through DNS queries, iodine being the most popular. This is more of simple demonstration of how it's possible to get up to date, human readable, information from a DNS query.
+This project has no serious application, it's merely a fun experiment that I prototyped while waiting on a delayed flight. There are numerous methods to tunnel traffic through DNS queries, iodine being the most popular. This is a simple demonstration of how it's possible to get up to date, human readable information from a DNS query.
 
 ## How
 
 Nearly all captive portals will still proxy outbound DNS requests. We can use this proxy of DNS requests to 'leak' information we might be interested in. In this case I'm returning my Twitter stream as TXT DNS records.
-
 
 ## Quick Demo
 
@@ -24,12 +23,14 @@ From your command line, lets fire up 'dig' and try it out!
     cd planeboard
     go get -u
     go build
+    cp config.toml.sample config.toml
+    vi config.toml # Update with relevant information
 
 What you'll need to use this:
 
 1. An NS record pointing at the host you're running this on
 2. A Twitter OAuth application and it's consumer keys
-3. A Twitter account authenticated with the Twitter OAuth application
+3. A Twitter account to authenticate with the Twitter OAuth application
 
 #### NS record example
 
@@ -48,8 +49,7 @@ Once you got config.toml setup with your Twitter keys, just run `./planeboard au
 
 Lets say I'm using pb.mdp.im as my host
 
-    # The following are example commands you could enter on your command line
-    # if you have 'dig' available on your system (OSX/Linux)
+    # The following are example 'dig' commands you would enter on your command line
 
     # Paginate with 'p'
     dig txt p0.pb.mdp.im
@@ -57,7 +57,7 @@ Lets say I'm using pb.mdp.im as my host
     dig txt p1.pb.mdp.im
     # Gives me the second tweet
 
-    # Toss in a 'b'(before) with a unix timestamp to help with pagination
+    # Toss in a 'b'(before) with a unix timestamp to help with proper pagination
     dig txt b1465514642.p1.pb.mdp.im
 
     # Toss in a 'c'(cachebuster) to prevent caching
