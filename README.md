@@ -29,7 +29,7 @@ Nearly all captive portals will still proxy outbound DNS requests. We can use th
 What you'll need to use this:
 
 1. An NS record pointing at the host you're running this on
-2. A Twitter OAuth application and it's consumer keys
+2. A [Twitter OAuth application](https://apps.twitter.com/) and it's consumer keys
 3. A Twitter account to authenticate with the Twitter OAuth application
 
 #### NS record example
