@@ -141,7 +141,7 @@ func (d *DataStore) FindTweet(screenNames []string, before int64, page int) *twi
 
 // Clean gets rid of old tweets we no longer care about
 func (d *DataStore) Clean(before int64) {
-	fmt.Printf("Deleting keys older than %d", before)
+	log.Printf("DataStore Clean - Deleting keys older than %d\n", before)
 	var matchingRecords = [][]byte{}
 	d.DB.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("Tweets"))
