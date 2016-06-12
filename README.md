@@ -3,6 +3,12 @@
 
 ![aeropuerto](https://cloud.githubusercontent.com/assets/2868/15951028/737d6ea8-2e69-11e6-8eda-a9a82d57a0ee.png)
 
+## Quick Demo
+
+From your command line, lets fire up 'dig' and try it out!
+
+`dig txt p0.t.news.pb.mdp.im`
+
 ## Why
 
 This project has no serious application, it's merely a fun experiment that I prototyped while waiting on a delayed flight. There are numerous methods to tunnel traffic through DNS queries, iodine being the most popular. This is a simple demonstration of how it's possible to get up to date, human readable information from a DNS query.
@@ -10,12 +16,6 @@ This project has no serious application, it's merely a fun experiment that I pro
 ## How
 
 Nearly all captive portals will still proxy outbound DNS requests. We can use this proxy of DNS requests to 'leak' information we might be interested in. In this case I'm returning my Twitter stream as TXT DNS records.
-
-## Quick Demo
-
-From your command line, lets fire up 'dig' and try it out!
-
-`dig txt p0.t.news.pb.mdp.im`
 
 ## Installation
 

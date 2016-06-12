@@ -7,34 +7,36 @@ import (
 )
 
 const (
-	k_auth_url         = "https://api.twitter.com/oauth/authorize"
-	k_token_url        = "https://api.twitter.com/oauth/request_token"
-	k_access_token_url = "https://api.twitter.com/oauth/access_token"
+	twAuthURL        = "https://api.twitter.com/oauth/authorize"
+	twTokenURL       = "https://api.twitter.com/oauth/request_token"
+	twAccessTokenURL = "https://api.twitter.com/oauth/access_token"
 )
 
+// Oauth struct for holding a consumer
 type Oauth struct {
 	Consumer *oauth.Consumer
 }
 
+// AuthenticationRequest holds our request for later confirmation
 type AuthenticationRequest struct {
 	RequestToken *oauth.RequestToken
-	Url          string
+	URL          string
 }
 
-func NewOauth(ConsumerKey, ConsumerSecret string) Oauth {
+func newOauth(ConsumerKey, ConsumerSecret string) Oauth {
 	c := oauth.NewConsumer(
 		ConsumerKey,
 		ConsumerSecret,
 		oauth.ServiceProvider{
-			RequestTokenUrl:   k_token_url,
-			AuthorizeTokenUrl: k_auth_url,
-			AccessTokenUrl:    k_access_token_url,
+			RequestTokenUrl:   twTokenURL,
+			AuthorizeTokenUrl: twAuthURL,
+			AccessTokenUrl:    twAccessTokenURL,
 		})
 
 	return Oauth{c}
 }
 
-func (o Oauth) NewAuthenticationRequest() (*AuthenticationRequest, error) {
+func (o Oauth) newAuthenticationRequest() (*AuthenticationRequest, error) {
 	requestToken, url, err := o.Consumer.GetRequestTokenAndUrl("oob")
 	if err != nil {
 		return nil, err
@@ -43,24 +45,26 @@ func (o Oauth) NewAuthenticationRequest() (*AuthenticationRequest, error) {
 	return &AuthenticationRequest{requestToken, url}, nil
 }
 
-func (o Oauth) GetAccessToken(RequestToken *oauth.RequestToken, code string) (*oauth.AccessToken, error) {
+func (o Oauth) getAccessToken(RequestToken *oauth.RequestToken, code string) (*oauth.AccessToken, error) {
 	accessToken, err := o.Consumer.AuthorizeToken(RequestToken, code)
 	return accessToken, err
 }
 
+// AuthWithTwitter call with the consumer key and secret to start
+// an OOB/PIN authentication with Twitter
 func AuthWithTwitter(consumerKey, consumerSecret string) {
-	oauth := NewOauth(consumerKey, consumerSecret)
-	ar, _ := oauth.NewAuthenticationRequest()
-	fmt.Printf("In your browser, log in to your twitter account.  Then visit: \n%s\n", ar.Url)
+	oauth := newOauth(consumerKey, consumerSecret)
+	ar, _ := oauth.newAuthenticationRequest()
+	fmt.Printf("In your browser, log in to your twitter account.  Then visit: \n%s\n", ar.URL)
 	fmt.Println("After logged in, you will be promoted with a pin number")
 	fmt.Println("Enter the pin number here:")
 	pinCode := ""
 	fmt.Scanln(&pinCode)
-	accessToken, err := oauth.GetAccessToken(ar.RequestToken, pinCode)
+	accessToken, err := oauth.getAccessToken(ar.RequestToken, pinCode)
 	if err != nil {
 		fmt.Printf("Error getting your access token: %s\n", err)
 		return
 	}
-	fmt.Println("Here's your access token and secret. Update config.toml with these keys")
-	fmt.Printf("TokenKey= \"%s\"\nTokenSecret: \"%s\"\n", accessToken.Token, accessToken.Secret)
+	fmt.Println("Success! The following are your access token and secret. Update config.toml with these keys")
+	fmt.Printf("TokenKey = \"%s\"\nTokenSecret = \"%s\"\n", accessToken.Token, accessToken.Secret)
 }
