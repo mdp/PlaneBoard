@@ -4,6 +4,9 @@ timestamp=$(date +%s)
 host=''
 subdomain=''
 account=''
+
+n=10
+
 cache_buster=$(cat /dev/urandom | env LC_CTYPE=C tr -dc 'a-z0-9' | fold -w 16 | head -n 1)
 
 usage() { echo "Usage: fetch [-n <NumberOfTweets>] [-h <host>] [-t topic] account/topic/home" 1>&2; exit 1; }
@@ -18,7 +21,7 @@ while getopts ":h:n:t" o; do
       n=${OPTARG}
       ;;
     t)
-      t=true
+      t=1
       ;;
     *)
       usage
@@ -34,10 +37,6 @@ fi
 
 if [ -n "${t}" ]; then
   subdomain='t.'${subdomain}
-fi
-
-if [ -z "${n}" ]; then
-  n=10
 fi
 
 if [ -z "${host}" ]; then
