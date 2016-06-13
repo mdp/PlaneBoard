@@ -1,5 +1,5 @@
 # PlaneBoard
-#### Read your tweets, even behind captive portals, using DNS TXT records
+#### Read your tweets, even behind captive WiFi portals, using DNS TXT records
 
 ![aeropuerto](https://cloud.githubusercontent.com/assets/2868/15951028/737d6ea8-2e69-11e6-8eda-a9a82d57a0ee.png)
 
@@ -11,7 +11,7 @@ From your command line, lets fire up 'dig' and try it out!
 
 ## Why
 
-This project has no serious application, it's merely a fun experiment that I prototyped while waiting on a delayed flight. There are numerous methods to tunnel traffic through DNS queries, iodine being the most popular. This is a simple demonstration of how it's possible to get up to date, human readable information from a DNS query.
+This project has no serious application, it's merely a fun experiment that I prototyped while waiting on a delayed flight. There are numerous methods to tunnel traffic through DNS queries, iodine being the most popular. This is just a simple demonstration of how it's possible to get up to date, human readable information from a DNS query.
 
 ## How
 
