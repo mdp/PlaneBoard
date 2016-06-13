@@ -31,6 +31,7 @@ type Group struct {
 func streamTweets(d *DataStore, config *Config) {
 	consumer := oauth1.NewConfig(config.ConsumerKey, config.ConsumerSecret)
 	token := oauth1.NewToken(config.TokenKey, config.TokenSecret)
+
 	httpClient := consumer.Client(oauth1.NoContext, token)
 	demux := twitter.NewSwitchDemux()
 	demux.Tweet = func(tweet *twitter.Tweet) {
@@ -48,6 +49,7 @@ func streamTweets(d *DataStore, config *Config) {
 		log.Fatal("Error", err)
 	}
 	log.Println("Streaming tweets")
+
 	go demux.HandleChan(stream.Messages)
 }
 
@@ -62,14 +64,18 @@ func parseConfig() Config {
 
 func main() {
 	log.Println("Starting server")
+
 	terminate := make(chan os.Signal)
 	signal.Notify(terminate, os.Interrupt)
+
 	config := parseConfig()
+
 	arg := os.Args[len(os.Args)-1]
 	if arg == "auth" {
 		AuthWithTwitter(config.ConsumerKey, config.ConsumerSecret)
 		return
 	}
+
 	dataStore, _ := SetupDataStore(config.DBFile)
 	defer dataStore.Close()
 

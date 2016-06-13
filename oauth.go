@@ -58,13 +58,16 @@ func AuthWithTwitter(consumerKey, consumerSecret string) {
 	fmt.Printf("In your browser, log in to your twitter account.  Then visit: \n%s\n", ar.URL)
 	fmt.Println("After logged in, you will be promoted with a pin number")
 	fmt.Println("Enter the pin number here:")
+
 	pinCode := ""
 	fmt.Scanln(&pinCode)
+
 	accessToken, err := oauth.getAccessToken(ar.RequestToken, pinCode)
 	if err != nil {
 		fmt.Printf("Error getting your access token: %s\n", err)
 		return
 	}
+
 	fmt.Println("Success! The following are your access token and secret. Update config.toml with these keys")
 	fmt.Printf("TokenKey = \"%s\"\nTokenSecret = \"%s\"\n", accessToken.Token, accessToken.Secret)
 }

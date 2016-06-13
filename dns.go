@@ -51,11 +51,13 @@ func parseRecordName(name string, host string) (*RecordQuery, error) {
 	if len(names) > 5 {
 		return nil, errors.New("Invalid query - Should be pPageNum.bTimestamp.accountName.host.com")
 	}
+
 	rq := &RecordQuery{
 		Name:   "home",
 		Before: time.Now().Unix(),
 		Page:   0,
 	}
+
 	for _, name := range names {
 		if strings.HasPrefix(name, "p") {
 			rq.Page = int(parseFlagInt(name, 0))
@@ -77,6 +79,7 @@ func (s *DNSServer) HandleRequest(w dns.ResponseWriter, r *dns.Msg) {
 	q := r.Question[0]
 	m := new(dns.Msg)
 	m.SetReply(r)
+
 	switch q.Qtype {
 	case dns.TypeA:
 		m.Answer = make([]dns.RR, 1)
@@ -88,15 +91,18 @@ func (s *DNSServer) HandleRequest(w dns.ResponseWriter, r *dns.Msg) {
 		if err != nil {
 			break
 		}
+
 		names := []string{query.Name}
 		if query.Topic {
 			names = s.Groups[strings.Title(query.Name)].Accounts
 		}
+
 		tweet := s.DataStore.FindTweet(names, query.Before, query.Page)
 		tweetTxt := "Sorry, no tweets found"
 		if tweet != nil {
 			tweetTxt = tweet.Text + " - @" + tweet.User.ScreenName
 		}
+
 		m.Answer = make([]dns.RR, 1)
 		m.Answer[0] = &dns.TXT{Hdr: dns.RR_Header{
 			Name:   m.Question[0].Name,
@@ -112,9 +118,11 @@ func (s *DNSServer) HandleRequest(w dns.ResponseWriter, r *dns.Msg) {
 // Serve - Start the DNS Server
 func (s *DNSServer) Serve() error {
 	dns.HandleFunc(".", s.HandleRequest)
+
 	addr := fmt.Sprintf(":%d", s.Port)
 	server := &dns.Server{Addr: addr, Net: "udp"}
 	log.Printf("DNS Serving to %s", addr)
+
 	err := server.ListenAndServe()
 	if err != nil {
 		log.Fatal(err)

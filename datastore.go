@@ -33,14 +33,17 @@ func (k *Key) Serialize() (string, error) {
 // Deserialize a Key from a string
 func (k *Key) Deserialize(str string) error {
 	keys := strings.Split(str, ":")
+
 	id, err := strconv.ParseInt(keys[2], 10, 64)
 	if err != nil {
 		return err
 	}
+
 	timestamp, err := strconv.ParseInt(keys[0], 10, 64)
 	if err != nil {
 		return err
 	}
+
 	k.ID = id
 	k.ScreenName = keys[1]
 	k.CreatedAt = timestamp
@@ -54,10 +57,12 @@ func SetupDataStore(dbFile string) (*DataStore, error) {
 		log.Fatal(err)
 		return nil, err
 	}
+
 	db.Update(func(tx *bolt.Tx) error {
 		_, err := tx.CreateBucketIfNotExists([]byte("Tweets"))
 		return err
 	})
+
 	return &DataStore{
 		DB: db,
 	}, nil
@@ -75,17 +80,21 @@ func (d *DataStore) AddTweet(tweet *twitter.Tweet) {
 		log.Println(err)
 		return
 	}
+
 	createdAt, err := time.Parse(TwitterTimeLayout, tweet.CreatedAt)
+
 	key := &Key{
 		ID:         tweet.ID,
 		ScreenName: strings.ToLower(tweet.User.ScreenName),
 		CreatedAt:  createdAt.Unix(),
 	}
+
 	keyStr, err := key.Serialize()
 	if err != nil {
 		log.Println(err)
 		return
 	}
+
 	d.DB.Update(func(tx *bolt.Tx) error {
 		b, err := tx.CreateBucketIfNotExists([]byte("Tweets"))
 		if err != nil {
@@ -103,6 +112,7 @@ func (d *DataStore) FindTweet(screenNames []string, before int64, page int) *twi
 		before = time.Now().Unix()
 	}
 	var matchingRecords = [][]byte{}
+
 	d.DB.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("Tweets"))
 
@@ -128,14 +138,17 @@ func (d *DataStore) FindTweet(screenNames []string, before int64, page int) *twi
 	if len(matchingRecords)-1 < page {
 		return nil
 	}
+
 	record := matchingRecords[len(matchingRecords)-page-1]
 	tweet := &twitter.Tweet{}
+
 	d.DB.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("Tweets"))
 		tweetJSON := b.Get(record)
 		json.Unmarshal(tweetJSON, tweet)
 		return nil
 	})
+
 	return tweet
 }
 
@@ -143,6 +156,7 @@ func (d *DataStore) FindTweet(screenNames []string, before int64, page int) *twi
 func (d *DataStore) Clean(before int64) {
 	log.Printf("DataStore Clean - Deleting keys older than %d\n", before)
 	var matchingRecords = [][]byte{}
+
 	d.DB.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("Tweets"))
 		b.ForEach(func(k, v []byte) error {
@@ -155,6 +169,7 @@ func (d *DataStore) Clean(before int64) {
 		})
 		return nil
 	})
+
 	d.DB.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("Tweets"))
 		for _, k := range matchingRecords {
